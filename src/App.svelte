@@ -1,19 +1,18 @@
 <script>
-  import Counter from './lib/Counter.svelte'
+  import ThreeScence from './ThreeScence.svelte'
 </script>
 
 <main>
   
   <nav>
-    <h1>3D-Scribe</h1>
+    <p>3d-Scribe</p>
+    <button>backgound color</button>
+    <button>save</button>
     <button>load object</button>
+
     <button>upload object</button>
   </nav>
+    <ThreeScence/>
   
-  <div class="card">
-    <Counter />
-  </div>
-
- 
 </main>
 
