@@ -128,8 +128,14 @@
 <style>
   canvas {
     display: block;
+    
   }
-
+  div{
+    width: 100%;
+    height: 90%;
+    padding: 0;
+    margin: 0;
+  }
 </style>
   
 <div bind:this={container}></div>
