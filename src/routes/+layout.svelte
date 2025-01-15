@@ -30,7 +30,6 @@
 </script>
 
 <FirebaseApp {auth} {firestore}>
-    <App/>
-    <slot/>
-    
+    <App {auth}/>
+    <slot style="max-height:90%;"/>
 </FirebaseApp>

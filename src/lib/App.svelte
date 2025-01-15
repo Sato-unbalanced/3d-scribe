@@ -1,36 +1,46 @@
 <script>
-  import { onMount } from 'svelte';
+  import { signInAnonymously, signInWithPopup } from "firebase/auth";
   import { goto } from "$app/navigation";
-let icon = "\u003E"
-/*onMount(() =>{
-var collapsibles = document.getElementsByClassName("collapsible");
-for(var i = 0; i < collapsibles.length; i++)
-{
-  collapsibles[i].addEventListener('click', function() {
-    this.classList.toggle("active");
-    var content2 = this.nextElementSibling;
-    if(content2.style.maxWidth)
-    {
-      icon = "\u003E";
-      content2.style.maxWidth = null;
-      content2.style.maxHeight = null;
-    }
-    else
-    {
-      icon = "\u003C"
-      content2.style.maxWidth = content2.scrollWidth + "px";
-      content2.style.maxHeight = "100%";
+  import { SignedIn, SignedOut } from "sveltefire";
+  import { GoogleAuthProvider} from "firebase/auth";
+  import { browser } from "$app/environment";
 
-    }
-  });
-}
-});*/
+  const Gprovider = new GoogleAuthProvider();
+
+  let signedinuser = {};
+  let token = "";
+  let solved = false;
+
+  const do_popup = async (auth, provider, type) => {
+        signInWithPopup(auth, provider)
+            .then((result) => {
+                // This gives you a Google Access Token. You can use it to access the Google API.
+                const credential = type.credentialFromResult(result);
+                token = credential.accessToken;
+                signedinuser = result.user;
+            })
+            .catch((error) => {
+                // Handle Errors here.
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                // The email of the user's account used.
+                const email = error.customData.email;
+                // The AuthCredential type that was used.
+                const credential = type.credentialFromError(error);
+                console.error("Auth error", {
+                    errorCode,
+                    errorMessage,
+                    email,
+                    credential,
+                });
+            });
+    };
+
 </script>
 
 <header>
   <nav>
   <h1>3d-Scribe</h1>
-  <button>backgound color</button>
   <button>save</button>
   <button>load object</button>
   <button class="btn" on:click={() => {
@@ -41,6 +51,23 @@ for(var i = 0; i < collapsibles.length; i++)
     <input type="checkbox">
     <span class="slider round"></span>
   </label>
+
+  <SignedIn let:user let:signOut>
+    <div class="current_user">
+      <p> {user.displayName ?user.displayName: "not supplied"}</p>
+      <button on:click={signOut}>Sign Out</button>
+    </div> 
+  </SignedIn>
+
+  <SignedOut let:auth>
+    <div class="siButton">
+      <p class="type">GOOGLE POPUP</p>
+      <button 
+          on:click={() => 
+              do_popup(auth, Gprovider, GoogleAuthProvider)}
+          >Sign In with popup</button>
+    </div>
+  </SignedOut>
   </nav>
 </header>
 
@@ -48,7 +75,7 @@ for(var i = 0; i < collapsibles.length; i++)
 
 header{
   display: grid;
-  grid-template-rows: 10% 90%;
+  grid-template-rows: 10%;
   position: relative;
   margin:0;
   padding: 0;
@@ -67,9 +94,31 @@ input{
   float: left;
   margin: 10px 20px 0px 20px;
 }
+.switch{
+  float: left;
+  margin: 10px 20px 0px 20px;
+}
+.siButton{
+  float: right;
+}
+.btn{
+  float: left;
+}
+.type{
+  float: left;
+}
+p{
+  float:left;
+}
+.current_user{
+  float: right;
+  margin: 0;
+  padding: 0;
+}
 nav{
   grid-row: 1;
-  padding: 1rem;
+  padding-bottom: 1rem;
+  padding-top: 1rem;
   margin: 0;
   height: 10%;
   width: 100%;
