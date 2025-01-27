@@ -30,7 +30,6 @@
 </script>
 
 <FirebaseApp {auth} {firestore}>
-    <App/>
+    <App {auth}/>
     <slot/>
-    
 </FirebaseApp>
