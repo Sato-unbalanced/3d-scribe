@@ -4,15 +4,29 @@
 </script>
 
 <SignedOut>
-  <h1>Welcome to 3d-scribe</h1>
-  <h3>You need to sign in to modify models, you may explore community models</h3>
+  <div id="content">
+    <h1>Welcome to 3d-scribe</h1>
+    <p><br>You need to sign in to load models and modify them, you may explore the community models.</p>
+  </div>
 </SignedOut>
 
 <SignedIn>
   <ThreeScence/>
 </SignedIn>
 
-
 <style>
+  #content{
+    display: grid;
+    place-items: center;
+    font-family: "Tan peral";
+  }
+  h1{
+    font-family: inherit;
+    font-size: 40px;
+  }
+  p{
+    font-family: inherit;
+    font-size: 20px;
+  }
 
 </style>

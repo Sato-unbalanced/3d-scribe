@@ -1,11 +1,14 @@
 <script>
   import { onMount } from "svelte";
   import * as THREE from "three";
-  import {OBJLoader} from 'three/examples/jsm/loaders/OBJLoader.js'
-  import {OrbitControls} from 'three/addons/controls/OrbitControls.js'
+  import { OBJLoader} from 'three/examples/jsm/loaders/OBJLoader.js';
+  import { OrbitControls} from 'three/addons/controls/OrbitControls.js';
+  import { CSS2DRenderer, CSS2DObject } from 'three/addons/renderers/CSS2Drenderer.js';
   
   let container;
   let objLoader1;
+  let labelRenderer;
+  let root;
   onMount(() => {
     // Scene
     const scene = new THREE.Scene();
@@ -78,11 +81,36 @@
         }
       });
 
-        // Animation loop 
+      /*
+      //right here trying  implement annotations
+
+      root = new THREE.Group();
+      scene.add( root);
+
+
+      labelRenderer = new CSS2DRenderer();
+      labelRenderer.setSize(window.innerWidth, window.innerHeight * 0.9);
+      labelRenderer.domElement.style.position = 'absolute';
+      labelRenderer.domElement.style.top = '0px';
+      labelRenderer.domElement.style.pointerEvents = 'none';
+      document.getElementById('container').appendChild(labelRenderer.domElement);
+
+      const text = document.createElement('div');
+      text.className ='label';
+
+      const label = new CSS2DObject(text);
+      label.position.copy( object.position);
+      root.add(label);
+      //right here trying to implement annotations
+      */
+
+
+      // Animation loop 
       const animate = function () { 
         requestAnimationFrame(animate); 
         controls.update();
         renderer.render(scene, camera); 
+        //labelRenderer.render(scene, camera);
       }; 
       
       animate(); 
@@ -91,6 +119,7 @@
         camera.aspect = window.innerWidth / window.innerHeight; 
         camera.updateProjectionMatrix(); 
         renderer.setSize(window.innerWidth, window.innerHeight*0.9); 
+        //labelRenderer.setSize(window.innerWidth, window.innerHeight*0.9);
       });
 
 
@@ -126,10 +155,6 @@
 </script>
   
 <style>
-  canvas {
-    display: block;
-    
-  }
   div{
     width: 100%;
     height: 90%;
