@@ -4,12 +4,12 @@
   import { SignedIn, SignedOut } from "sveltefire";
   import { GoogleAuthProvider} from "firebase/auth";
   import { browser } from "$app/environment";
+  import { onMount } from "svelte";
 
   const Gprovider = new GoogleAuthProvider();
 
   let signedinuser = {};
   let token = "";
-  let solved = false;
 
   const do_popup = async (auth, provider, type) => {
         signInWithPopup(auth, provider)
@@ -18,6 +18,7 @@
                 const credential = type.credentialFromResult(result);
                 token = credential.accessToken;
                 signedinuser = result.user;
+                console.log("user has loged in", signedinuser)
             })
             .catch((error) => {
                 // Handle Errors here.
@@ -36,21 +37,55 @@
             });
     };
 
+   
+
+  onMount(()=>{
+    var root = document.documentElement;
+    var checkBox = document.getElementById('colorSwitch');
+    const buttons = document.querySelectorAll('button');
+    checkBox.addEventListener('input', function(){
+      console.log(this.checked);
+      if(this.checked)
+      {
+        root.style.setProperty('background-color',"#080808");
+        root.style.setProperty('color','#ffffff');
+        buttons.forEach(button => {
+          button.style.backgroundColor = '#080808';
+
+        });
+
+        console.log("checked");
+      }
+      else
+      {
+        root.style.setProperty('background-color',"#fefefe");
+        root.style.setProperty('color', '#080808');
+        buttons.forEach(button => {
+          button.style.backgroundColor = '#bababa';
+
+        });
+      }
+    });
+   });
 </script>
 
 <header>
   <nav>
-  <h1>3d-Scribe</h1>
-  <button>save</button>
-  <button>load object</button>
+  <h1 id="name">3d-Scribe</h1>
+  <button class="btn" on:click={() =>{
+    console.log("simulate saved changes")
+  }}>Save</button>
+  <button onclick="uploadFile()">Upload model</button>
+  <input type="file" id="fileInput1" accept=".obj">
   <button class="btn" on:click={() => {
     goto("/fromDB")
-  }}>upload object</button>
+  }}>Import object</button>
   <input type="file" id="fileInput" accept=".obj">
   <label class="switch">
-    <input type="checkbox">
+    <input type="checkbox" id="colorSwitch">
     <span class="slider round"></span>
   </label>
+  <a href="https://docs.google.com/forms/d/e/1FAIpQLScMRPpGrcudvx_BNKVxZFS-PK12TwyHUjve99LPM3brMg26PA/viewform?usp=dialog" target="_blank">Feed back</a>
 
   <SignedIn let:user let:signOut>
     <div class="current_user">
@@ -72,6 +107,13 @@
 </header>
 
 <style>
+  #name{
+    font-family: "Tan peral";
+    text-align: center;
+    font-size: 40px;
+    padding: 0Px 20px 0px;
+    margin: auto; 
+  }
 
 header{
   display: grid;
@@ -89,6 +131,7 @@ h1{
 button{
   float:left;
   margin: 10px 20px 0px 20px; 
+ 
 }
 input{
   float: left;
@@ -136,7 +179,7 @@ nav{
 
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  background-color: #080808;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -233,7 +276,7 @@ input:checked + .slider:before{
 
 @media (prefers-color-scheme: light) {
   :root {
-    color: #213547;
+    color: #080808;
     background-color: #ffffff;
   }
   a:hover {
