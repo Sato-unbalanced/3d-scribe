@@ -3,7 +3,7 @@
   import * as THREE from "three";
   import { OBJLoader} from 'three/examples/jsm/loaders/OBJLoader.js';
   import { OrbitControls} from 'three/addons/controls/OrbitControls.js';
-  import { CSS2DRenderer, CSS2DObject } from 'three/addons/renderers/CSS2Drenderer.js';
+  //import { CSS2DRenderer, CSS2DObject } from 'three/addons/renderers/CSS2Drenderer.js';
   
   let container;
   let objLoader1;
