@@ -37,7 +37,9 @@ declare module '$env/static/private' {
 	export const ComSpec: string;
 	export const DriverData: string;
 	export const EDITOR: string;
-	export const EFC_21908: string;
+	export const EFC_10628: string;
+	export const FPS_BROWSER_APP_PROFILE_STRING: string;
+	export const FPS_BROWSER_USER_PROFILE_STRING: string;
 	export const GIT_ASKPASS: string;
 	export const HOME: string;
 	export const HOMEDRIVE: string;
@@ -107,8 +109,6 @@ declare module '$env/static/private' {
 	export const VSCODE_GIT_ASKPASS_NODE: string;
 	export const VSCODE_GIT_IPC_HANDLE: string;
 	export const VSCODE_INJECTION: string;
-	export const VSCODE_NONCE: string;
-	export const VSCODE_STABLE: string;
 	export const windir: string;
 	export const ZES_ENABLE_SYSMAN: string;
 }
@@ -129,6 +129,7 @@ declare module '$env/static/public' {
 	export const PUBLIC_FIREBASE_STORAGE_BUCKET: string;
 	export const PUBLIC_FIREBASE_MESSAGING_SENDER_ID: string;
 	export const PUBLIC_FIREBASE_APP_ID: string;
+	export const PUBLIC_BACKEND_WEBSITE_URL: string;
 }
 
 /**
@@ -158,7 +159,9 @@ declare module '$env/dynamic/private' {
 		ComSpec: string;
 		DriverData: string;
 		EDITOR: string;
-		EFC_21908: string;
+		EFC_10628: string;
+		FPS_BROWSER_APP_PROFILE_STRING: string;
+		FPS_BROWSER_USER_PROFILE_STRING: string;
 		GIT_ASKPASS: string;
 		HOME: string;
 		HOMEDRIVE: string;
@@ -228,8 +231,6 @@ declare module '$env/dynamic/private' {
 		VSCODE_GIT_ASKPASS_NODE: string;
 		VSCODE_GIT_IPC_HANDLE: string;
 		VSCODE_INJECTION: string;
-		VSCODE_NONCE: string;
-		VSCODE_STABLE: string;
 		windir: string;
 		ZES_ENABLE_SYSMAN: string;
 		[key: `PUBLIC_${string}`]: undefined;
@@ -257,6 +258,7 @@ declare module '$env/dynamic/public' {
 		PUBLIC_FIREBASE_STORAGE_BUCKET: string;
 		PUBLIC_FIREBASE_MESSAGING_SENDER_ID: string;
 		PUBLIC_FIREBASE_APP_ID: string;
+		PUBLIC_BACKEND_WEBSITE_URL: string;
 		[key: `PUBLIC_${string}`]: string | undefined;
 	}
 }
