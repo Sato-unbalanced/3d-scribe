@@ -15,7 +15,8 @@
 </SignedIn>
 
 <style>
-  #content{
+  #content
+  {
     display: grid;
     place-items: center;
     font-family: "Tan peral";
