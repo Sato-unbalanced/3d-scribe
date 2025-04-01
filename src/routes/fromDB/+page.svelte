@@ -1,6 +1,7 @@
 
 <script>
     import { PUBLIC_BACKEND_WEBSITE_URL } from "$env/static/public";
+    
 
     let object;
     async function func(event)

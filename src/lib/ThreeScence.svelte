@@ -110,7 +110,6 @@
     document.body.appendChild( labelRenderer.domElement);
 
     objLoader1 = new OBJLoader();
-    glbLoader = new GLTFLoader();
 
     document.getElementById('fileInput').addEventListener('change', function(event) {
         const file = event.target.files[0];
@@ -334,7 +333,8 @@
 
 
 <style>
-  div{
+  div
+  {
     width: 100%;
     height: 90%;
     padding: 0;
@@ -384,7 +384,8 @@
   {
     background-color: lightskyblue;
   }
-  .btn_model{
+  .btn_model
+  {
     background-color: #212122;
     border: none;
     width: 15em;
