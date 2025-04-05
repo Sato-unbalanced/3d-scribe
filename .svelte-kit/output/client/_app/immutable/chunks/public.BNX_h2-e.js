@@ -1,0 +1,1 @@
+const E="AIzaSyDxHlKUbKhpBXQZbQV29ssjbG-U1Yb33tE",s="d-scribe-bd124.firebaseapp.com",_="d-scribe-bd124",I="d-scribe-bd124.firebasestorage.app",B="654459852725",b="1:654459852725:web:5f2f774ef47b47fac52bfc",a="http://127.0.0.1:5000";export{a as P,E as a,s as b,_ as c,I as d,B as e,b as f};

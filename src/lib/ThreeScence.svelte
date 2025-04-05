@@ -159,7 +159,7 @@
   
         //console.log("Page was reloaded");
         const savedUrl = localStorage.getItem('objModelUrl');
-        //console.log(savedUrl);
+        console.log(savedUrl);
         if (savedUrl) {
           //console.log("Trying to load the file that was saved locally");
           loadModel(savedUrl);

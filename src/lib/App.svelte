@@ -4,6 +4,7 @@
   import { SignedIn, SignedOut } from "sveltefire";
   import { GoogleAuthProvider} from "firebase/auth";
   import { browser } from "$app/environment";
+  import {PUBLIC_BACKEND_WEBSITE_URL} from "$env/static/public";
   import { onMount } from "svelte";
 
   const Gprovider = new GoogleAuthProvider();
@@ -18,7 +19,8 @@
                 const credential = type.credentialFromResult(result);
                 token = credential.accessToken;
                 signedinuser = result.user;
-                console.log("user has loged in", signedinuser)
+                console.log("user has loged in", signedinuser);
+                create_user(signedinuser.uid);
             })
             .catch((error) => {
                 // Handle Errors here.
@@ -36,6 +38,21 @@
                 });
             });
     };
+  async function create_user(user_id)
+  {
+    const requestOptions = {
+      method: "POST",
+      redirect: "follow"
+    };
+    try{
+      const response = await fetch(PUBLIC_BACKEND_WEBSITE_URL + "/create/user/" + user_id, requestOptions );
+      const result = await response.text();
+      return JSON.parse(result)[0]["result"];
+    }
+    catch(error){
+      console.error("Error from presigned_url: " + error)
+    }
+  }
 
    
 
@@ -87,7 +104,10 @@
     console.log("simulate saved changes")
   }}>Save</button>
 
-  <button on:click={ uploadFile}>Upload model</button>
+  <button popovertarget="my-popover">Upload model</button>
+  <div id="my-popover" popover>
+    <p>hello there</p>
+  </div>
 
   <button class="btn" on:click={() => {
     goto("/fromDB")
@@ -228,7 +248,7 @@
 
   button 
   {
-    background-color: #1a1a1a;
+    /*background-color: #1a1a1a;*/
     border: 1px solid transparent;
     border-radius: 12px;
     cursor: pointer;
