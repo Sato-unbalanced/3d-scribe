@@ -4,7 +4,10 @@
   import { SignedIn, SignedOut } from "sveltefire";
   import { GoogleAuthProvider} from "firebase/auth";
   import { browser } from "$app/environment";
+  import { getAuth, onAuthStateChanged } from "firebase/auth";
+  import {PUBLIC_BACKEND_WEBSITE_URL} from "$env/static/public";
   import { onMount } from "svelte";
+  import {sharedValue } from "./store.js";
 
   const Gprovider = new GoogleAuthProvider();
 
@@ -18,7 +21,8 @@
                 const credential = type.credentialFromResult(result);
                 token = credential.accessToken;
                 signedinuser = result.user;
-                console.log("user has loged in", signedinuser)
+                //console.log("user has loged in", signedinuser);
+                create_user(signedinuser.uid);
             })
             .catch((error) => {
                 // Handle Errors here.
@@ -36,39 +40,152 @@
                 });
             });
     };
-
-   
-
+  async function create_user(user_id)
+  {
+    const requestOptions = {
+      method: "POST",
+      redirect: "follow"
+    };
+    try{
+      const response = await fetch(PUBLIC_BACKEND_WEBSITE_URL + "/create/user/" + user_id, requestOptions );
+      const result = await response.text();
+      return JSON.parse(result)[0]["result"];
+    }
+    catch(error){
+      console.error("Error from presigned_url: " + error)
+    }
+  }
+  let user_id;
   onMount(()=>{
     var root = document.documentElement;
     var checkBox = document.getElementById('colorSwitch');
-    const buttons = document.querySelectorAll('button');
     checkBox.addEventListener('input', function(){
-      console.log(this.checked);
       if(this.checked)
       {
+        root.style.setProperty('background-color',"#f5f5f5");
+        root.style.setProperty('color', '#080808');
+        root.style.setProperty('--background-color',"#f5f5f5");
+        root.style.setProperty('--color', '#080808');
+
+        root.style.setProperty('--background-color-s', '#F8F6F0');
+        root.style.setProperty('--color-s', '#080808');
+        }
+        else
+        {
         root.style.setProperty('background-color',"#080808");
-        root.style.setProperty('color','#ffffff');
-        buttons.forEach(button => {
-          button.style.backgroundColor = '#080808';
-        });
-        console.log("checked");
+        root.style.setProperty('color','#f5f5f5');
+        root.style.setProperty('--background-color',"#080808");
+        root.style.setProperty('--color', '#f5f5f5');
+
+        root.style.setProperty('--background-color-s', '#181818');
+        root.style.setProperty('--color-s','whitesmoke');
+      }
+    });
+    const auth = getAuth();
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        user_id = user.uid || 'Guest';
+      } else {
+        console.log('No user signed in.');
+      }
+    });
+
+    //achive
+    const save_popover_btn = document.getElementById("save/create");
+    const popover_select_name = document.getElementById("project-popover");
+    const btn_project_name = document.getElementById("project_name_complete");
+    save_popover_btn.addEventListener("click", (event) =>{
+      event.preventDefault();
+      if($sharedValue == "")
+      {
+        const fileInput = document.getElementById('fileInput');
+        const file = fileInput.files[0]; // Get the first selected file
+        if (!file) 
+        {
+          alert('No file selected!');
+          popover_select_name.hidePopover();     
+        }
+        else
+        {
+          const fromData = new FormData();
+          fromData.append("file", file);
+          popover_select_name.togglePopover();
+
+          btn_project_name.addEventListener("click", () => {
+            popover_select_name.hidePopover();
+            let project_name_field = document.getElementById("project_name");
+            let project_name = project_name_field.value;
+            create_project(project_name, fromData);
+          }); 
+        }
       }
       else
       {
-        root.style.setProperty('background-color',"#fefefe");
-        root.style.setProperty('color', '#080808');
-        buttons.forEach(button => {
-          button.style.backgroundColor = '#bababa';
-        });
+        alert("current project already saved to create a new project press clear button and Select a local file");
+        popover_select_name.hidePopover();
       }
     });
+
    });
 
-   function uploadFile()
-   {
+   async function create_project(project_name, fromData)
+  {
+    const requestOptions = {
+      method: "POST",
+      body: fromData,
+      redirect: "follow"
+    };
+    try{
+      const response = await fetch(PUBLIC_BACKEND_WEBSITE_URL + "/create/project/" + project_name + "/" + user_id, requestOptions );
+      const result = await response.text();
+      return JSON.parse(result)[0]["result"];
+    }
+    catch(error){
+      console.error("Error from creating project: " + error)
+    }
+  }
 
-   }
+  //  function save_ceate_project()
+  //   {
+  //     if($sharedValue == "")
+  //     {
+        
+  //       // Get the file from the file input
+  //       const fileInput = document.getElementById('fileInput');
+  //       const file = fileInput.files[0]; // Get the first selected file
+  //       console.log($sharedValue);
+  //       if (!file) {
+  //         alert('No file selected!');
+  //         return;
+  //       }
+
+  //       // Create FormData to send the file
+  //       const formData = new FormData();
+  //       formData.append('file', file); // Append the file with a field name (e.g., 'file')
+  //       // Send the file to the backend using Fetch API
+  //       fetch(PUBLIC_BACKEND_WEBSITE_URL + "/create/project/", {
+  //         method: 'POST',
+  //         body: formData,
+  //       })
+  //         .then((response) => {
+  //           if (!response.ok) {
+  //             throw new Error('Failed to upload file');
+  //           }
+  //           return response.json();
+  //         })
+  //         .then((data) => {
+  //           console.log('File uploaded successfully:', data);
+  //         })
+  //         .catch((error) => {
+  //           console.error('Error uploading file:', error);
+  //         });
+  //     }
+  //     else
+  //     {
+
+  //     }
+      
+  //   } 
 </script>
 
 <header>
@@ -83,11 +200,17 @@
   <a href="https://docs.google.com/forms/d/e/1FAIpQLScMRPpGrcudvx_BNKVxZFS-PK12TwyHUjve99LPM3brMg26PA/viewform?usp=dialog" target="_blank">Feedback</a>
 
 
-  <button class="btn" on:click={() =>{
-    console.log("simulate saved changes")
-  }}>Save</button>
-
-  <button on:click={ uploadFile}>Upload model</button>
+  <button class="btn" id="save/create" popovertarget="project-popover"  >Save</button>
+  <div id="project-popover" popover>
+    <form>
+      <label for = "projet_name">Project Name: </label>
+      <input type="text" id="project_name">
+      <div>
+        <button id = "project_name_complete">Compete</button>
+        <button>Cancel</button>
+      </div>
+    </form>
+  </div>
 
   <button class="btn" on:click={() => {
     goto("/fromDB")
@@ -189,7 +312,7 @@
   {
     display: grid;
     /*grid-row: 0;*/
-    grid-template-columns: auto auto auto auto auto auto auto auto auto;
+    grid-template-columns: auto auto auto auto auto auto auto auto;
     height: 100%;
     position: relative;
     width: 100%;
@@ -205,6 +328,11 @@
     color-scheme: light dark;
     color: rgba(255, 255, 255, 0.87);
     background-color: #080808;
+    --background-color: #080808;
+    --color: #fefefe;
+
+    --background-color-s: #181818;
+    --color-s: whitesmoke;
 
     font-synthesis: none;
     text-rendering: optimizeLegibility;
@@ -228,7 +356,8 @@
 
   button 
   {
-    background-color: #1a1a1a;
+    background-color: var(--background-color);
+    color: var(--color);
     border: 1px solid transparent;
     border-radius: 12px;
     cursor: pointer;

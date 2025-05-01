@@ -11,7 +11,7 @@
 </SignedOut>
 
 <SignedIn>
-  <ThreeScence/>
+  <ThreeScence width_scale={1} height={0.9}/>
 </SignedIn>
 
 <style>
