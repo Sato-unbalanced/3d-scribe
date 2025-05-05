@@ -443,14 +443,11 @@
       remove_lines(id);
       curent_annotation_id = "";
     }
-    if (id != "")
+    if (id != "" && map_annotations.has(id))
     {
       let label = map_annotations.get(id);
       prev_object.remove(label);
-      if(map_annotations.has(id))
-      {
-        map_annotations.delete(id);
-      }
+      map_annotations.delete(id);
     }
 
   }
@@ -618,7 +615,7 @@
     if(result[0]["result"] == 200)
       clear_form();
     else
-      console.log("Deletion of annotation was not succesful.");
+      alert("Deletion of annotation was not succesful.");
   }
   async function project_delete_annotation()
   {
@@ -629,8 +626,10 @@
 
     try
     {
-      const response = await fetch(PUBLIC_BACKEND_WEBSITE_URL + "/annotation/delete/" + project_id + "/" + user_id + "/" + curent_annotation_id, requestOptions);
+      const response = await fetch(PUBLIC_BACKEND_WEBSITE_URL + "/remove/annotation/" + $sharedValue + "/" + user_id + "/" + curent_annotation_id, requestOptions);
       const result = await response.text();
+      button_annotation_names = button_annotation_names.filter(button_annotation_names => button_annotation_names.id != curent_annotation_id );
+      remove_annotation(curent_annotation_id);
       return JSON.parse(result);
     }
     catch (error)
